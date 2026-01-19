@@ -5,29 +5,18 @@ import { MdDone } from "react-icons/md";
 
 type Props = {
   todo: Todo;
-  todos: Todo[];
-  setTodos: React.Dispatch<React.SetStateAction<Todo[]>>;
+  onDelete: (id: string) => void;
+  onDone: (id: string) => void;
+  onEdit: (id: string, todo: string) => void;
 };
 
-const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
+const SingleTodo: React.FC<Props> = ({ todo, onDelete, onDone, onEdit }) => {
   const [edit, setEdit] = useState<boolean>(false);
   const [editTodo, setEditTodo] = useState<string>(todo.todo);
-  const handleDone = (id: number) => {
-    setTodos(
-      todos.map((todo) =>
-        todo.id === id ? { ...todo, isDone: !todo.isDone } : todo
-      )
-    );
-  };
-  const handleDelete = (id: number) => {
-    setTodos(todos.filter((todo) => todo.id !== id));
-  };
 
-  const handleEdit = (e: React.FormEvent, id: number) => {
+  const handleEdit = (e: React.FormEvent, id: string) => {
     e.preventDefault();
-    setTodos(
-      todos.map((todo) => (todo.id === id ? { ...todo, todo: editTodo } : todo))
-    );
+    onEdit(id, editTodo);
     setEdit(false);
   };
 
@@ -71,10 +60,10 @@ const SingleTodo: React.FC<Props> = ({ todo, todos, setTodos }) => {
             }}
           />
         </span>
-        <span className="icon" onClick={() => handleDelete(todo.id)}>
+        <span className="icon" onClick={() => onDelete(todo.id)}>
           <DeleteIcon />
         </span>
-        <span className="icon" onClick={() => handleDone(todo.id)}>
+        <span className="icon" onClick={() => onDone(todo.id)}>
           <DoneIcon />
         </span>
       </div>
